@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>椰树风格海报生成器</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <style>
+        html, body {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: whitesmoke;
+            font-family: Arial, sans-serif;
+        }
+
+        [v-cloak] {
+            display: none;
+        }
+
+        #preview {
+            background-color: #ffffff;
+        }
+
+        #yeshu {
+            width: auto;
+            height: 0;
+
+            margin: 0 auto;
+            background-color: #000;
+            border: 2px solid #FEEF50;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            padding: .2rem 0;
+
+            font-weight: bold;
+            text-align: center;
+            line-height: 1;
+        }
+
+        #save {
+            margin: 0 auto;
+            display: block;
+            vertical-align: bottom;
+        }
+
+        .yeshu-center {
+            margin: 0 .4rem;
+            background-color: #FEEF50;
+            padding: .1rem;
+        }
+
+        .yeshu-title {
+            color: #000;
+            height: 5%;
+            font-size: 1.1rem;
+        }
+
+        .yeshu-inner {
+            background-color: #0021FC;
+            border: .04rem solid #000000;
+            color: #ffffff;
+            padding: .04rem .04rem .4rem;
+        }
+
+        .yeshu-zhengzong {
+            font-size: 1.1rem;
+            vertical-align: baseline;
+            margin: .1rem 0;
+        }
+
+        .yeshu-brand {
+            border: .04rem solid #FEEF50;
+            border-radius: 0.5rem;
+            background-color: #FD0000;
+            padding: .1rem;
+
+            font-size: 3.6rem;
+        }
+
+        .yeshu-year {
+            margin: .1rem 0;
+            text-shadow: -.04rem -.04rem 0 #000,
+            .04rem -.04rem 0 #000,
+            -.04rem .04rem 0 #000,
+            .04rem .04rem 0 #000;
+            font-size: 2.3rem;
+        }
+
+        .yeshu-island {
+            color: #FEEF50;
+            font-size: 1.2rem;
+        }
+
+        .yeshu-fresh {
+            border: .08rem solid #FD0000;
+            border-radius: .1rem;
+            background-color: #FEEF50;
+            color: #FD0000;
+            margin: .1rem -.1rem;
+            padding: .1rem;
+
+            font-size: 1.2rem;
+        }
+
+        .yeshu-xianzha {
+            color: #FEEF50;
+            font-size: 4rem;
+            text-shadow: -.04rem -.04rem 0 #000,
+            .04rem -.04rem 0 #000,
+            -.04rem .04rem 0 #000,
+            .04rem .04rem 0 #000;
+        }
+
+        .yeshu-no-addon {
+            border: .06rem solid #FEEF50;
+            border-radius: 0.3rem;
+            background-color: #FD0000;
+            padding: .1rem;
+            margin: -.1rem .1rem;
+            color: #ffffff;
+        }
+
+        .yeshu-no-addon > p {
+            line-height: 1;
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        .yeshu-no-addon > p:first-child {
+            font-size: 1.5rem;
+        }
+
+        .button {
+            -webkit-appearance: none;
+            border: none;
+            outline: none;
+
+            background-color: #206DDC;
+            color: #ffffff;
+            font-size: 20px;
+            text-align: center;
+            line-height: 1;
+            padding: 15px 0;
+        }
+    </style>
+</head>
+<body>
+<p style="opacity: 0; width: 0; height: 0; position: absolute;">生成椰树椰汁风格表情包</p>
+<div id="app" v-cloak>
+    <div id="preview">
+        <div id="yeshu" :style="yeshuStyleObj" v-if="status != 'save'">
+            <div class="yeshu-center">
+                <div class="yeshu-title" contenteditable="true">
+                    椰树风格海报生成
+                </div>
+                <div class="yeshu-inner">
+                    <div class="yeshu-zhengzong" contenteditable="true">
+                        超高清
+                    </div>
+                    <div class="yeshu-brand" contenteditable="true">
+                        免费
+                    </div>
+                    <div class="yeshu-year" contenteditable="true">
+                        简单
+                    </div>
+                    <div class="yeshu-island" contenteditable="true">
+                        直接修改文字
+                    </div>
+                    <div class="yeshu-fresh" contenteditable="true">
+                        然后点击保存
+                    </div>
+                    <div class="yeshu-xianzha" contenteditable="true">
+                        搞定
+                    </div>
+                </div>
+            </div>
+            <div class="yeshu-no-addon">
+                <p contenteditable="true">本服务</p>
+                <p contenteditable="true">由img.run提供</p>
+            </div>
+        </div>
+        <img id="save" v-if="status == 'save'" :src="dataURL" :style="yeshuStyleObj">
+    </div>
+    <div :style="{ height: saveBtnHeight + 'px', 'font-size': 0 }" v-if="status != 'save'">
+        <button class="button" type="button" @click="save" style="width: 70%">
+            {{ status == 'edit' ? '保存' : '正在生成海报…' }}
+        </button>
+        <button class="button" type="button" @click="source" style="width: 30%; background-color: #0021FC">
+            图样跑酷
+        </button>
+    </div>
+    <div :style="{ height: saveBtnHeight + 'px', 'font-size': 0 }" v-if="status == 'save'">
+        <button class="button" type="button" style="width: 70%">
+            长按/右键图片保存
+        </button>
+        <button class="button" type="button" @click="back" style="width: 30%; background-color: #0021FC">
+            返回修改
+        </button>
+    </div>
+</div>
+<script src="https://cdn.staticfile.net/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdn.staticfile.net/vue/2.7.8/vue.min.js"></script>
+<script>
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            yeshuStyleObj: {
+                width: 'auto',
+                height: 0
+            },
+            saveBtnHeight: 50,
+
+            status: 'edit',
+            dataURL: ''
+        },
+        mounted: function () {
+            var h = window.innerHeight || document.documentElement.clientHeight;
+            var previewHeight = h - this.saveBtnHeight;
+            this.yeshuStyleObj.height = previewHeight + 'px';
+            this.yeshuStyleObj.width = (previewHeight / 2.1) + 'px';
+
+            document.documentElement.style.fontSize = (previewHeight / 21) + 'px';
+        },
+        methods: {
+            back: function () {
+                this.status = 'edit';
+            },
+            source: function () {
+                // 修复链接，移除错误的字符
+                location.href = 'https://img.run';
+            },
+            save: function () {
+                var self = this;
+                this.status = 'wait'; // 确保状态更新能触发视图更新
+        
+                var yeshu = document.getElementById('yeshu');
+        
+                html2canvas(yeshu).then(function (canvas) {
+                    // 使用 Vue 的 this.$set 方法来更新 dataURL，确保视图更新
+                    self.$set(self, 'dataURL', canvas.toDataURL('image/png'));
+                    self.status = 'save'; // 同上
+                }).catch(function (error) {
+                    console.error('html2canvas failed to generate canvas:', error);
+                    self.status = 'edit'; // 恢复状态，允许用户重新尝试
+                });
+            }
+        }
+    })
+</script>
+</body>
+</html>
